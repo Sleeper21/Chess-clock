@@ -1,0 +1,63 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    background-color: rgb(17, 17, 17);
+    padding: .25rem;
+}
+
+.clock-section{
+    display: flex;
+    flex-direction: column;
+    height: 99vh;
+}
+
+.btn{
+    background-color: rgb(78, 78, 78);
+    height: 100%;
+    font-size: 6.5rem;
+    font-weight: 600;
+    color: rgb(15, 15, 15);
+    border: 2px solid rgb(15, 15, 15);
+}
+
+.btn-player2{
+    /* Text upside down */
+    -moz-transform: scale(-1, -1);
+    -webkit-transform: scale(-1, -1);
+    -o-transform: scale(-1, -1);
+    -ms-transform: scale(-1, -1);
+    transform: scale(-1, -1);
+}
+
+.icon{
+    width: 30px;
+    height: auto;
+}
+
+.settings-nav{
+    display: flex;
+    padding: 1rem;
+    justify-content: space-around;
+}
+
+.moves{
+    position: absolute;
+    display: block;
+    font-size: 1.1rem;
+}
+
+.moves-p1{
+    top: 55%;
+    left: 77%;
+    right: 5%;
+    margin-top: 1rem;
+}
+
+.moves-p2{
+    top: 5%;
+    left: 77%;
+    right: 5%;
+}

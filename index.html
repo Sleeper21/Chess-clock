@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Clock App</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <section class="clock-section">
+
+        <button id="player2" class="btn btn-player2" disabled>
+            00:00
+
+            <div class="moves moves-p2">
+                <p id="player2-moves" class="moves-counter">Moves: 0</p>
+            </div>
+
+        </button>
+
+        
+
+        <div class="settings-nav">
+            <img src="/images/reset.png" class="icon reset-icon" alt="reset clock">
+            <img src="/images/start.png" class="icon start-icon" alt="start clock">
+            <img src="/images/edit-time.png" class="icon edit-icon" alt="edit time options">
+            <img src="/images/volume.png" class="icon volume-icon" alt="mute/unmute sounds">
+        </div>
+
+        
+
+        <button id="player1" class="btn btn-player1" disabled>
+
+            <div class="moves moves-p1">
+                <p id="player1-moves" class="moves-counter">Moves: 0</p>
+            </div>
+
+            00:00
+        </button>
+        
+    </section>
+</body>
+</html>
