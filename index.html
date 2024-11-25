@@ -10,10 +10,20 @@
 <body>
     <section class="clock-section">
 
-        <button id="player2" class="btn btn-player2" disabled>
-            00:00
+        <button id="player2" class="btn btn-player2">
+            <div>
+                <p id="current-format2" class="absolute center current-format2">3/2</p>
+            </div>
 
-            <div class="moves moves-p2">
+            <div>
+                <ul id="display2" class="display">
+                    <li id="hours2">  <span></span>  </li>
+                    <li id="minutes2">  <span>00:</span>  </li>
+                    <li id="seconds2">  <span>00</span>  </li>
+                </ul>
+            </div>
+
+            <div class="moves absolute moves-p2">
                 <p id="player2-moves" class="moves-counter">Moves: 0</p>
             </div>
 
@@ -22,23 +32,35 @@
         
 
         <div class="settings-nav">
-            <img src="/images/reset.png" class="icon reset-icon" alt="reset clock">
-            <img src="/images/start.png" class="icon start-icon" alt="start clock">
-            <img src="/images/edit-time.png" class="icon edit-icon" alt="edit time options">
-            <img src="/images/volume.png" class="icon volume-icon" alt="mute/unmute sounds">
+            <img id="reset-icon" src="/images/reset.png" class="icon reset-icon" alt="reset clock">
+            <img id="start-icon" src="/images/start.png" class="icon startAndPause-icon" alt="start clock">
+            <img id="edit-icon" src="/images/edit-time.png" class="icon edit-icon" alt="edit time options">
+            <img id="volume-icon" src="/images/volume.png" class="icon volume-icon" alt="mute/unmute sounds">
         </div>
 
         
 
-        <button id="player1" class="btn btn-player1" disabled>
+        <button id="player1" class="btn btn-player1">
 
-            <div class="moves moves-p1">
+            <div class="moves absolute moves-p1">
                 <p id="player1-moves" class="moves-counter">Moves: 0</p>
             </div>
 
-            00:00
+            <div>
+                <ul id="display1" class="display">
+                    <li id="hours1">    </li>
+                    <li id="minutes1">  00: </li>
+                    <li id="seconds1">  00  </li>
+                </ul>
+            </div>
+
+            <div>
+                <p id="current-format1" class="absolute center current-format1">3/2</p>
+            </div>
         </button>
         
     </section>
+
+    <script src="index.js"></script>
 </body>
 </html>

@@ -2,6 +2,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    text-decoration: none;
+    list-style: none;
 }
 body{
     background-color: rgb(17, 17, 17);
@@ -32,6 +34,12 @@ body{
     transform: scale(-1, -1);
 }
 
+.display{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .icon{
     width: 30px;
     height: auto;
@@ -43,7 +51,7 @@ body{
     justify-content: space-around;
 }
 
-.moves{
+.absolute{
     position: absolute;
     display: block;
     font-size: 1.1rem;
@@ -60,4 +68,19 @@ body{
     top: 5%;
     left: 77%;
     right: 5%;
+}
+
+.center{
+    left: 0; 
+    right: 0; 
+    margin-inline: auto; 
+    width: fit-content;
+}
+
+.current-format1{
+    bottom: 5%; 
+}
+
+.current-format2{
+    bottom: 5%;
 }
