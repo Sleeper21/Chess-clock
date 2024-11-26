@@ -1,6 +1,6 @@
 // Current format
 let currentFormat = {
-    hours: 0,
+    hours: "",
     minutes: "00",
     seconds: "10",
     increment: true,
@@ -13,23 +13,23 @@ let currentIncrement = {
 };
 
 // Player 1 clock
-let currentP1Hours = "";
-let currentP1Minutes = "00";
-let currentP1Seconds = "10";
+let currentP1Hours = currentFormat.hours;
+let currentP1Minutes = currentFormat.minutes;
+let currentP1Seconds = currentFormat.seconds;
 let p1moveCount = 0;
 
 let clock1 = document.getElementById("player1");
 
 //Player 2 clock
-let currentP2Hours = "";
-let currentP2Minutes = "00";
-let currentP2Seconds = "10";
+let currentP2Hours = currentFormat.hours;
+let currentP2Minutes = currentFormat.minutes;
+let currentP2Seconds = currentFormat.seconds;
 let p2moveCount = 0;
 
 let clock2 = document.getElementById("player2");
 
 // Nav icon settings
-let resetClock = document.getElementById("reset-icon");
+let reset = document.getElementById("reset-icon");
 let startPause = document.getElementById("start-icon");
 let editTime = document.getElementById("edit-icon");
 let volume = document.getElementById("volume-icon");
@@ -41,6 +41,7 @@ let isPaused = false; // Paused game is only when a game is running but the cloc
 let isGameRunning = false;
 let timer1;
 let timer2;
+let firstCall = true; // will use this to wait 1sec in order to start decrementing the clock seconds
 
 //Update clocks display
 updateClock_1_Display();
@@ -51,7 +52,7 @@ clock1.addEventListener("click", startClock2);
 clock2.addEventListener("click", startClock1);
 
 //Event listeners nav settings
-resetClock.addEventListener("click", resetClock);
+reset.addEventListener("click", resetClock);
 startPause.addEventListener("click", toggleStartPause);
 //editTime.addEventListener("click", editTimeFormat);
 //volume.addEventListener.("click", muteUnmute);
@@ -95,6 +96,10 @@ function startClock1(){
     playerToMove = 1;
     isPaused = false;
     isGameRunning = true;
+    firstCall = true;
+
+    //Change Background colors
+    handleActiveClockColor();
 
     //Disable/enable buttons
     clock2.disabled = true;
@@ -131,6 +136,10 @@ function startClock2(){
     playerToMove = 2;
     isPaused = false;
     isGameRunning = true;
+    firstCall = true;
+
+    //Change Background colors
+    handleActiveClockColor();
 
     //Disable buttons
     clock2.disabled = false;
@@ -144,9 +153,14 @@ function startClock2(){
 
 // Countdown function
 function countdown(){
-
+    
     // Player 1 Clock
     if (currentPlayer === "player1") {
+        // check if this is the first call so the first second does not get decremented immediately
+        if (firstCall){
+            firstCall = false;
+            return
+        };
 
         currentP1Hours = document.getElementById("hours1").textContent;
         currentP1Minutes = document.getElementById("minutes1").textContent;
@@ -174,13 +188,17 @@ function countdown(){
             updateClock_1_Display();
 
             endGame();
-            startPause.setAttribute("src", "/images/start.png");
-            
+            startPause.setAttribute("src", "/images/start.png");            
         } 
     };
     
     //Player 2 Clock
     if (currentPlayer === "player2"){
+        // check if this is the first call so the first second does not get decremented immediately
+        if (firstCall){
+            firstCall = false;
+            return
+        };
 
         currentP2Seconds -- ;
 
@@ -213,10 +231,10 @@ function countdown(){
 function endGame(){
     console.log(currentPlayer)
     if ( currentPlayer === "player1" ) {
-        clock1.style.backgroundColor = "red";
+        clock1.classList.add("red");
         
     } else if ( currentPlayer === "player2" ) {
-        clock2.style.backgroundColor = "red";
+        clock2.classList.add("red");
     }
     clearInterval(timer1);
     clearInterval(timer2);
@@ -274,9 +292,73 @@ function toggleStartPauseIcons(){
     };
 };
 
-// function resetClock() {
+function resetClock() {
+    //Stop clocks
+    clearInterval(timer1);
+    clearInterval(timer2);
+    isPaused = true;
 
-// }
+    //Disable clock area buttons
+    clock1.disabled = true;
+    clock2.disabled = true;
+
+    //Always change icon to "start". The toggle function don't work here
+    startPause.setAttribute("src", "/images/start.png");
+
+    // Show confirmation pop up
+    let resetPopup = document.getElementById("reset-alert");
+    resetPopup.classList.remove("hidden");
+
+    //Add eventlistener to each button
+
+    //No
+    document.getElementById("reset-no").addEventListener("click", () => {
+        resetPopup.classList.add("hidden");
+    });
+
+    //Yes
+    document.getElementById("reset-yes").addEventListener("click", () => {
+        resetPopup.classList.add("hidden");
+
+        clock2.classList.remove("red");
+        clock1.classList.remove("red");
+        clock2.classList.remove("green");
+        clock1.classList.remove("green");
+
+        currentP1Hours = currentFormat.hours;
+        currentP1Minutes = currentFormat.minutes;
+        currentP1Seconds = currentFormat.seconds;
+        p1moveCount = 0;
+
+        currentP2Hours = currentFormat.hours;
+        currentP2Minutes = currentFormat.minutes;
+        currentP2Seconds = currentFormat.seconds;
+        p2moveCount = 0;
+
+        isPaused = false;
+        isGameRunning = false;
+        currentPlayer = "player1";
+
+        //Disable clock area buttons
+        clock1.disabled = false;
+        clock2.disabled = false;
+
+        //Update displays
+        updateClock_1_Display();
+        updateClock_2_Display();
+    })    
+}
+
+function handleActiveClockColor(){
+    if (currentPlayer === "player1") {
+        clock1.classList.add("green");
+        clock2.classList.remove("green");
+
+    } else if (currentPlayer === "player2") {
+        clock1.classList.remove("green");
+        clock2.classList.add("green");
+    }
+}
 
 
 

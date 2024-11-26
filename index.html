@@ -37,6 +37,15 @@
             <img id="edit-icon" src="/images/edit-time.png" class="icon edit-icon" alt="edit time options">
             <img id="volume-icon" src="/images/volume.png" class="icon volume-icon" alt="mute/unmute sounds">
             
+            <div id="reset-alert" class="reset-popup-container hidden">
+                <form id="resetGame-form">
+                    <label for="resetGame">This will reset both clocks. Proceed? </label>
+                    <div class="button-group">
+                        <button type="button" id="reset-yes" name="resetGame">Yes</button>
+                        <button type="button" id="reset-no" name="resetGame">No</button>
+                    </div>
+                </form>
+            </div>
         </div>
 
         
@@ -56,7 +65,7 @@
             </div>
 
             <div>
-                <p id="current-format1" class="absolute center current-format1">3/2</p>
+                <p id="current-format1" class="absolute center-h current-format1">3/2</p>
             </div>
         </button>
         

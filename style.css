@@ -70,7 +70,7 @@ body{
     right: 5%;
 }
 
-.center{
+.center-h{
     left: 0; 
     right: 0; 
     margin-inline: auto; 
@@ -85,7 +85,60 @@ body{
     bottom: 5%;
 }
 
+/* Reset Game confirmation pop Up */
+.reset-popup-container{
+    background-color: rgb(15, 15, 15);
+    color: aliceblue;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
+    width: 80%;
+    height: 200px;
+    padding: 1.5rem 1.7rem .5rem;
+    text-align: center;
+    font-size: 1.5rem;
+    text-shadow: 1px 1px 4px black;
+    border-radius: 15px;
+    line-height: 2.3rem;
+
+    -webkit-box-shadow: 2px -2px 65px 34px rgba(15,15,15,1);
+    -moz-box-shadow: 2px -2px 65px 34px rgba(15,15,15,1);
+    box-shadow: 2px -2px 65px 34px rgba(15,15,15,1);
+}
+
+#reset-yes, #reset-no{
+    padding: 1rem 2rem;
+    margin-top: 1.5rem;
+    margin-inline: 1rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    border: none;
+    box-shadow: 2px 2px 3px black;
+    background-color: rgb(78, 78, 78);
+    color: white;
+    text-shadow: 1px 1px 1px black;
+    cursor: pointer;
+}
+
+#reset-yes:active, #reset-no:active{
+    background-color: rgb(37, 37, 37);
+    box-shadow: 1px 1px 2px black;
+}
+
 #start-icon:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+.hidden{
+    display: none;
+}
+
+.green{
+    background-color: green;
+}
+.red{
+    background-color: red;
 }
