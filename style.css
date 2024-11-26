@@ -84,3 +84,8 @@ body{
 .current-format2{
     bottom: 5%;
 }
+
+#start-icon:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
