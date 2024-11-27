@@ -41,8 +41,16 @@ body{
 }
 
 .icon{
-    width: 30px;
+    width: 35px;
     height: auto;
+    border-radius: 20%;
+    padding: .15rem;
+    overflow: visible;
+}
+.icon:active{
+    background-color: grey;
+    transition: 10ms ease;
+    
 }
 
 .settings-nav{

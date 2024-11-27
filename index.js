@@ -17,7 +17,6 @@ let currentP1Hours = currentFormat.hours;
 let currentP1Minutes = currentFormat.minutes;
 let currentP1Seconds = currentFormat.seconds;
 let p1moveCount = 0;
-
 let clock1 = document.getElementById("player1");
 
 //Player 2 clock
@@ -25,7 +24,6 @@ let currentP2Hours = currentFormat.hours;
 let currentP2Minutes = currentFormat.minutes;
 let currentP2Seconds = currentFormat.seconds;
 let p2moveCount = 0;
-
 let clock2 = document.getElementById("player2");
 
 // Nav icon settings
@@ -36,12 +34,19 @@ let volume = document.getElementById("volume-icon");
 
 // Swap variables
 let currentPlayer = "player1";
-let playerToMove = 1;
 let isPaused = false; // Paused game is only when a game is running but the clocks are paused.
 let isGameRunning = false;
 let timer1;
 let timer2;
 let firstCall = true; // will use this to wait 1sec in order to start decrementing the clock seconds
+
+//Audio files
+let isMuted = false;
+const endMoveAudio = new Audio("/sounds/clock-sound.mp3");
+const timeoutAudio = new Audio("/sounds/timeout.mp3");
+
+//Display the current Format
+//displayCurrentFormat();
 
 //Update clocks display
 updateClock_1_Display();
@@ -55,7 +60,7 @@ clock2.addEventListener("click", startClock1);
 reset.addEventListener("click", resetClock);
 startPause.addEventListener("click", toggleStartPause);
 //editTime.addEventListener("click", editTimeFormat);
-//volume.addEventListener.("click", muteUnmute);
+volume.addEventListener("click", muteUnmute);
 
 function updateClock_1_Display(){
     //Hide hours display if hour < 1
@@ -137,6 +142,9 @@ function startClock1(){
     clock2.disabled = true;
     clock1.disabled = false;
 
+    //Play Sound
+    if ( !isMuted ) endMoveAudio.play();
+
     //Start countdown
     countdown();
     timer1 = setInterval(countdown, 1000);    
@@ -172,7 +180,6 @@ function startClock2(){
     };
 
     //Increment move count
-    console.log(isPaused)
     if (isGameRunning && !isPaused) { // Only increments after the first move (game is running) prevents incrementing is game was paused
         p1moveCount++;
         document.getElementById("p1-moveCount").textContent = p1moveCount;
@@ -191,6 +198,9 @@ function startClock2(){
     //Disable buttons
     clock2.disabled = false;
     clock1.disabled = true;
+
+    //Play Sound
+    if ( !isMuted ) endMoveAudio.play();
 
     //Start countdown
     countdown();
@@ -278,7 +288,6 @@ function countdown(){
 }
 
 function endGame(){
-    console.log(currentPlayer)
     if ( currentPlayer === "player1" ) {
         clock1.classList.add("red");
         
@@ -291,6 +300,8 @@ function endGame(){
     clock2.disabled = true;
     isGameRunning = false;
     currentPlayer = "none";
+    //Play Sound
+    if ( !isMuted ) timeoutAudio.play();
 };
 
 //Start/pause button - Start the current Player's clock or pause current player's clock
@@ -411,3 +422,11 @@ function handleActiveClockColor(){
         clock2.classList.add("green");
     }
 };
+
+function muteUnmute(){
+   isMuted = isMuted === false ? true : false ;
+   //Swap icon
+   if ( isMuted ) {
+    document.getElementById("volume-icon").setAttribute("src", "/images/soundOff.png")
+   } else document.getElementById("volume-icon").setAttribute("src", "/images/soundOn.png")
+}
