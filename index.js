@@ -1,8 +1,8 @@
 // Current format
 let currentFormat = {
-    hours: "",
-    minutes: "00",
-    seconds: "10",
+    hours: 0,
+    minutes: 0,
+    seconds: 5,
     increment: true,
 };
 
@@ -58,17 +58,35 @@ startPause.addEventListener("click", toggleStartPause);
 //volume.addEventListener.("click", muteUnmute);
 
 function updateClock_1_Display(){
-    document.getElementById("hours1").textContent = currentP1Hours ;
-    document.getElementById("minutes1").textContent = currentP1Minutes;
-    document.getElementById("seconds1").textContent = currentP1Seconds;    
+    //Hide hours display if hour < 1
+    if ( String(currentP1Hours).padStart(2, '0') < 1 ) {
+        document.getElementById("hours1").classList.add("hidden");
+        document.getElementById("hours1-separator").classList.add("hidden");
+    }
+    if ( String(currentP1Hours).padStart(2, '0') >= 1 ) {
+        document.getElementById("hours1").classList.remove("hidden");
+        document.getElementById("hours1-separator").classList.remove("hidden");
+    }
+    //Display Values
+    document.getElementById("hours1").textContent = String(currentP1Hours).padStart(2, '0');
+    document.getElementById("minutes1").textContent = String(currentP1Minutes).padStart(2, '0');
+    document.getElementById("seconds1").textContent = String(currentP1Seconds).padStart(2, '0');    
 };
-
-function updateClock_2_Display(){    
-    document.getElementById("hours2").textContent = currentP2Hours;
-    document.getElementById("minutes2").textContent = currentP2Minutes;
-    document.getElementById("seconds2").textContent = currentP2Seconds;    
-};
-   
+function updateClock_2_Display(){
+    //Hide hours display if hour < 1
+    if ( String(currentP2Hours).padStart(2, '0') < 1 ) {
+        document.getElementById("hours2").classList.add("hidden");
+        document.getElementById("hours2-separator").classList.add("hidden");
+    }
+    if ( String(currentP2Hours).padStart(2, '0') >= 1 ) {
+        document.getElementById("hours2").classList.remove("hidden");
+        document.getElementById("hours2-separator").classList.remove("hidden");
+    }
+    //Display Values   
+    document.getElementById("hours2").textContent = String(currentP2Hours).padStart(2, '0');
+    document.getElementById("minutes2").textContent = String(currentP2Minutes).padStart(2, '0');
+    document.getElementById("seconds2").textContent = String(currentP2Seconds).padStart(2, '0');    
+};   
 
 // Player 1 Clock
 function startClock1(){
@@ -86,17 +104,31 @@ function startClock1(){
     if ( currentFormat.increment && !isPaused ) {
         currentP2Minutes = parseInt(document.getElementById("minutes2").textContent) + parseInt(currentIncrement.minutes)
         currentP2Seconds = parseInt(document.getElementById("seconds2").textContent) + parseInt(currentIncrement.seconds)
-        
-        document.getElementById("minutes2").textContent = String(parseInt(currentP2Minutes)).padStart(2, '0');
-        document.getElementById("seconds2").textContent = String(parseInt(currentP2Seconds)).padStart(2, '0');
+        //Handle if seconds or minutes > 60
+        if (currentP2Seconds >= 60) {
+            currentP2Seconds = currentP2Seconds - 60;
+            currentP2Minutes ++ ;
+        }
+        if ( currentP2Minutes >= 60 ) {
+            currentP2Minutes = currentP2Minutes - 60;
+            currentP2Hours ++ ;
+        }
+     updateClock_2_Display();
+
     };
+
+    //Increment move count
+    if (isGameRunning && !isPaused) { // Only increments after the first move (game is running) prevents incrementing is game was paused
+        p2moveCount++;
+        document.getElementById("p2-moveCount").textContent = p2moveCount;
+    }  
 
     //handle swap variables
     currentPlayer = "player1";
     playerToMove = 1;
     isPaused = false;
     isGameRunning = true;
-    firstCall = true;
+    firstCall = true;    
 
     //Change Background colors
     handleActiveClockColor();
@@ -109,7 +141,6 @@ function startClock1(){
     countdown();
     timer1 = setInterval(countdown, 1000);    
 }
-
 //Player 2 Clock
 function startClock2(){
     //Stop the opponent's clock
@@ -126,10 +157,26 @@ function startClock2(){
     if ( currentFormat.increment && !isPaused ) {
         currentP1Minutes = parseInt(document.getElementById("minutes1").textContent) + parseInt(currentIncrement.minutes)
         currentP1Seconds = parseInt(document.getElementById("seconds1").textContent) + parseInt(currentIncrement.seconds)
+        //Handle if seconds or minutes is > 60
+        if (currentP1Seconds >= 60) {
+            currentP1Seconds = currentP1Seconds - 60;
+            currentP1Minutes ++ ;
+        }
+        if ( currentP1Minutes >= 60 ) {
+            currentP1Minutes = currentP1Minutes - 60;
+            currentP1Hours ++ ;
+        };
         
-        document.getElementById("minutes1").textContent = String(parseInt(currentP1Minutes)).padStart(2, '0');
-        document.getElementById("seconds1").textContent = String(parseInt(currentP1Seconds)).padStart(2, '0');
+        updateClock_1_Display();
+        
     };
+
+    //Increment move count
+    console.log(isPaused)
+    if (isGameRunning && !isPaused) { // Only increments after the first move (game is running) prevents incrementing is game was paused
+        p1moveCount++;
+        document.getElementById("p1-moveCount").textContent = p1moveCount;
+    }
 
     //handle swap variables
     currentPlayer = "player2";
@@ -165,31 +212,33 @@ function countdown(){
         currentP1Hours = document.getElementById("hours1").textContent;
         currentP1Minutes = document.getElementById("minutes1").textContent;
         currentP1Seconds = document.getElementById("seconds1").textContent;
-        
-        currentP1Seconds -- ;        
 
-        if ( currentP1Seconds < 0 && currentP1Minutes > 0) {
+        //Decrease Seconds
+        currentP1Seconds -- ;
+
+        //Decrease minutes
+        if ( currentP1Seconds < 0 && currentP1Minutes > 0 ) {
             currentP1Seconds = 59;
-            currentP1Minutes -- ;            
+            currentP1Minutes --;
+        }
+        //Decrease hour
+        if ( currentP1Seconds < 0 && currentP1Minutes == 0 && currentP1Hours > 0) {
+            currentP1Seconds = 59;
+            currentP1Minutes = 59;
+            currentP1Hours -- ;
         }
 
-        //add second digit '0' if < 10
-        if ( currentP1Seconds < 10 || currentP1Minutes < 10 ) {
-            currentP1Minutes = String(currentP1Minutes).padStart(2, '0');
-            currentP1Seconds = String(currentP1Seconds).padStart(2, '0');
-        };
-
-        updateClock_1_Display();
-
         //If time run out
-        if ( String(currentP1Seconds).padStart(2, '0') === "00" && String(currentP1Minutes).padStart(2, '0') === "00" ) {
+        if ( currentP1Seconds == 0 && currentP1Minutes == 0 && currentP1Hours == 0) {
+            currentP1Hours = String(currentP1Hours).padStart(2, '0');
             currentP1Minutes = String(currentP1Minutes).padStart(2, '0');
             currentP1Seconds = String(currentP1Seconds).padStart(2, '0');
-            updateClock_1_Display();
 
             endGame();
             startPause.setAttribute("src", "/images/start.png");            
-        } 
+        }
+
+        updateClock_1_Display();
     };
     
     //Player 2 Clock
@@ -200,31 +249,31 @@ function countdown(){
             return
         };
 
+        //Decrease Seconds
         currentP2Seconds -- ;
 
-        if ( currentP2Seconds < 0 && currentP2Minutes > 0) {
+        //Decrease minutes
+        if ( currentP2Seconds < 0 && currentP2Minutes > 0 ) {
             currentP2Seconds = 59;
             currentP2Minutes --;
-            
+        }
+        //Decrease hour
+        if ( currentP2Seconds < 0 && currentP2Minutes == 0 && currentP2Hours > 0) {
+            currentP2Seconds = 59;
+            currentP2Minutes = 59;
+            currentP2Hours -- ;
         }
 
-        //add second digit '0' if < 10
-        if ( currentP2Seconds < 10 || currentP2Minutes < 10 ) {
-            currentP2Minutes = String(currentP2Minutes).padStart(2, '0');
-            currentP2Seconds = String(currentP2Seconds).padStart(2, '0');
-        };
-
-        updateClock_2_Display();
-
         //If time run out
-        if ( String(currentP2Seconds).padStart(2, '0') === "00" && String(currentP2Minutes).padStart(2, '0') === "00" ) {
+        if ( currentP2Seconds == 0 && currentP2Minutes == 0 && currentP2Hours == 0 ) {
+            currentP2Hours = String(currentP2Hours).padStart(2, '0');
             currentP2Minutes = String(currentP2Minutes).padStart(2, '0');
             currentP2Seconds = String(currentP2Seconds).padStart(2, '0');
-            updateClock_2_Display();
-
             endGame();
             startPause.setAttribute("src", "/images/start.png");            
-        } 
+        }
+
+        updateClock_2_Display();
     }
 }
 
@@ -241,7 +290,6 @@ function endGame(){
     clock1.disabled = true;
     clock2.disabled = true;
     isGameRunning = false;
-    //document.getElementById("start-icon").disabled = true;
     currentPlayer = "none";
 };
 
@@ -325,19 +373,23 @@ function resetClock() {
         clock2.classList.remove("green");
         clock1.classList.remove("green");
 
+        //reset values to current format values
         currentP1Hours = currentFormat.hours;
         currentP1Minutes = currentFormat.minutes;
         currentP1Seconds = currentFormat.seconds;
-        p1moveCount = 0;
 
         currentP2Hours = currentFormat.hours;
         currentP2Minutes = currentFormat.minutes;
         currentP2Seconds = currentFormat.seconds;
-        p2moveCount = 0;
 
+        //Reset game status
         isPaused = false;
         isGameRunning = false;
         currentPlayer = "player1";
+        p1moveCount = 0;
+        p2moveCount = 0;
+        document.getElementById("p1-moveCount").textContent = p1moveCount;
+        document.getElementById("p2-moveCount").textContent = p2moveCount;
 
         //Disable clock area buttons
         clock1.disabled = false;
