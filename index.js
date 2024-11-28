@@ -1,12 +1,15 @@
 // Current format
 let currentFormat
-let currentIncrement 
+let currentIncrement
+let displayFormat1 = document.getElementById("current-format1");
+let displayFormat2 = document.getElementById("current-format2"); 
+
 // Player 1 clock
 let currentP1Hours 
 let currentP1Minutes 
 let currentP1Seconds 
 let p1moveCount 
-let clock1 
+let clock1
 //Player 2 clock
 let currentP2Hours  
 let currentP2Minutes 
@@ -47,13 +50,6 @@ const timeoutAudio = new Audio("/sounds/timeout.mp3");
 //Set current Format variables
 setCurrentFormatStats();
 
-//Display the current Format
-//displayCurrentFormat();
-
-//Update clocks display
-updateClock_1_Display();
-updateClock_2_Display();
-
 // When display is clicked or pressed, start the opponent's clock
 clock1.addEventListener("click", startClock2);
 clock2.addEventListener("click", startClock1);
@@ -64,16 +60,21 @@ startPause.addEventListener("click", toggleStartPause);
 editTime.addEventListener("click", editTimeFormat);
 volume.addEventListener("click", muteUnmute);
 
-function setCurrentFormatStats(hour, min, sec, increment){
+function setCurrentFormatStats(hour, min, sec, increment, showOnDisplay){
     // Current format
     currentFormat = {
         hours: hour ? hour : 0,
-        minutes: min ? min : 10,
+        minutes: min ? min : 0,
         seconds: sec ? sec : 0,
         increment: increment ? true : false,
     };
 
-    currentIncrement = 0;
+    //Current game increment
+    currentIncrement = currentFormat.increment ? increment : 0;
+
+    //Display format on clock screens
+    displayFormat1.textContent = showOnDisplay ? showOnDisplay : "";
+    displayFormat2.textContent = showOnDisplay ? showOnDisplay : "";
 
     // Player 1 clock
     currentP1Hours = currentFormat.hours;
@@ -97,6 +98,11 @@ function setCurrentFormatStats(hour, min, sec, increment){
     p2moveCount = 0;
     document.getElementById("p1-moveCount").textContent = p1moveCount;
     document.getElementById("p2-moveCount").textContent = p2moveCount;
+    clock2.classList.remove("red");
+    clock1.classList.remove("red");
+    clock2.classList.remove("green");
+    clock1.classList.remove("green");
+
     //Disable clock area buttons
     clock1.disabled = false;
     clock2.disabled = false;
@@ -143,8 +149,7 @@ function startClock1(){
 
     //Handle if both clock are set up to 00:00
     if ( currentP1Seconds == 0 && currentP1Minutes == 0 && currentP1Hours == 0){
-        currentPlayer = "player1";
-        endGame();
+        editTimeFormat();
         return;
     } 
 
@@ -206,8 +211,7 @@ function startClock2(){
 
     //prevent start game if both clock are set up to 00:00
     if ( currentP2Seconds == 0 && currentP2Minutes == 0 && currentP2Hours == 0){
-        currentPlayer = "player2";
-        endGame();
+        editTimeFormat();
         return;
     }
 
@@ -263,7 +267,6 @@ function startClock2(){
     countdown();
     timer2 = setInterval(countdown, 1000);    
 };
-
 
 // Countdown function
 function countdown(){
@@ -363,7 +366,12 @@ function endGame(){
 
 //Start/pause button - Start the current Player's clock or pause current player's clock
 function toggleStartPause(){
-    let iconSrc = startPause.getAttribute("src");
+
+    //prevent start game if both clock are set up to 00:00
+    if ( currentP2Seconds == 0 && currentP2Minutes == 0 && currentP2Hours == 0 && currentP1Seconds == 0 && currentP1Minutes == 0 && currentP1Hours == 0){
+        editTimeFormat();
+        return;
+    }
 
     if ((isPaused && isGameRunning) || (!isGameRunning && !isPaused)){
         //Start current Player's clock and swap icon
@@ -436,14 +444,15 @@ function resetClock() {
         clock2.classList.remove("green");
         clock1.classList.remove("green");
 
-        //Get values to restart game with same format
+        //Get values to reset game with same format
         let formatHours = currentFormat.hours;
         let formatMinutes = currentFormat.minutes;
         let formatSeconds = currentFormat.seconds;
         let formatIncrement = currentIncrement;
+        let showOnDisplay = displayFormat1.textContent;
 
         //reset game values
-        setCurrentFormatStats(formatHours, formatMinutes, formatSeconds, formatIncrement);
+        setCurrentFormatStats(formatHours, formatMinutes, formatSeconds, formatIncrement, showOnDisplay);
     })    
 }
 
@@ -481,7 +490,7 @@ function editTimeFormat(){
     //Show options panel
     document.getElementById("edit-format-panel").classList.remove("hidden");
     
-    //eventlistener for close panel and go back
+    //go back and resume game
     const close = document.getElementById("close");
     close.addEventListener("click", () => {
         document.getElementById("edit-format-panel").classList.add("hidden");
@@ -489,21 +498,60 @@ function editTimeFormat(){
     });
 
     //Eventlistener for all the option buttons
-    bullet1.addEventListener("click", () => {
-        //Pause clocks first
+    const editCard = document.getElementById("time-options");
+    const timeOptions = editCard.querySelectorAll("button");
 
-        setCurrentFormatStats(0, 1, 0, 0);
+    timeOptions.forEach(option => {
         
-        //close panel and set game stats
-        document.getElementById("edit-format-panel").classList.add("hidden");
-        updateClock_1_Display();
-        updateClock_2_Display();
-        clock2.classList.remove("red");
-        clock1.classList.remove("red");
-        clock2.classList.remove("green");
-        clock1.classList.remove("green");
-    });
-    
+        option.addEventListener("click", () => {
+            let show
+           switch (option.id) {
+               case "bullet1":
+                    //set game stats
+                    show = "1 min";
+                    setCurrentFormatStats(0, 1, 0, 0, show);        
+                    break;
+                case "bullet2":
+                    show = "1 | 1";
+                    setCurrentFormatStats(0, 1, 0, 1, show);
+                    break;
+                case "bullet3":
+                    show = "2 | 1";
+                    setCurrentFormatStats(0, 2, 0, 1, show);
+                    break;
+                case "blitz1":
+                    show = "3 min";
+                    setCurrentFormatStats(0, 3, 0, 0, show);
+                    break;
+                case "blitz2":
+                    show = "3 | 2";
+                    setCurrentFormatStats(0, 3, 0, 2, show);
+                    break;
+                case "blitz3":
+                    show = "5 min";
+                    setCurrentFormatStats(0, 5, 0, 0, show);
+                    break;                
+                case "rapid1":
+                    show = "10 min";
+                    setCurrentFormatStats(0, 10, 0, 0, show);
+                    break;                
+                case "rapid2":
+                    show = "15 | 10";
+                    setCurrentFormatStats(0, 15, 0, 10, show);
+                    break;                
+                case "rapid3":
+                    show = "30 min";
+                    setCurrentFormatStats(0, 30, 0, 0, show);
+                    break;
+                
+               default:
+                    setCurrentFormatStats(0, 0, 0, 0);
+                    break;
+           }
+           //Close panel
+           document.getElementById("edit-format-panel").classList.add("hidden");
+        })
+    });    
 }
 
 function resumeCurrentGame(){

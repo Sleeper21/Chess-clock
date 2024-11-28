@@ -37,18 +37,16 @@
             <img id="edit-icon" src="/images/edit-time.png" class="icon edit-icon" alt="edit time options">
             <img id="volume-icon" src="/images/soundOn.png" class="icon volume-icon" alt="mute/unmute sounds">
             
-            <div id="reset-alert" class="reset-popup-container center-v hidden">
-                <form id="resetGame-form">
-                    <label for="resetGame">This will reset both clocks. Proceed? </label>
-                    <div class="button-group">
-                        <button type="button" id="reset-yes" name="resetGame">Yes</button>
-                        <button type="button" id="reset-no" name="resetGame">No</button>
-                    </div>
-                </form>
+            <div id="reset-alert" class="reset-popup-container center-v hidden">                
+                <p>This will reset both clocks. Proceed?</p> 
+                <div class="button-group">
+                    <button type="button" id="reset-yes" >Yes</button>
+                    <button type="button" id="reset-no" >No</button>
+                </div>                
             </div>
 
             <div id="edit-format-panel" class="edit-container center-v hidden">
-                <div class="edit-card">
+                <div id="time-options" class="edit-card">
                     <div class="close-box">
                         <a href="#" id="close">
                             <img class="icon close-icon" src="/images/close.png" alt="close panel">
@@ -59,7 +57,7 @@
                             <img class="icon format-icon" src="/images/bullet-icon.png" alt="bullet section icon">
                             <p class="edit-section-title">Bullet</p>
                         </div>
-                        <div class="edit-options">
+                        <div id="bullet-options" class="edit-options">
                             <button id="bullet1" class="format-options-btn">1 min</button>
                             <button id="bullet2" class="format-options-btn">1 | 1</button>
                             <button id="bullet3" class="format-options-btn">2 | 1</button>
@@ -92,7 +90,7 @@
                     <div class="custom-section">
                         <div class="edit-titles">
                             <img class="icon format-icon" src="/images/custom-icon.png" alt="bullet section icon">
-                            <p class="edit-section-title">Custom</p>
+                            <p class="edit-section-title">Custom Time - (increment optional)</p>
                         </div>
                         <div class="edit-options">
                             <form class="form-custom-time">
@@ -101,7 +99,7 @@
                                 <input type="number" class="input increment" maxlength="2" id="input-increment" min="0" step="1" placeholder="increment sec (optional)"></input>
                                 
                                 <button type="submit" class="submit">
-                                    <img class="icon" src="/images/submit-icon.png" alt="submit">
+                                    <img class="icon submit-img" src="/images/submit-icon.png" alt="submit">
                                 </button>
                             </form>                            
                         </div>                        
