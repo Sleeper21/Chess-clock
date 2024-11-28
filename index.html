@@ -37,7 +37,7 @@
             <img id="edit-icon" src="/images/edit-time.png" class="icon edit-icon" alt="edit time options">
             <img id="volume-icon" src="/images/soundOn.png" class="icon volume-icon" alt="mute/unmute sounds">
             
-            <div id="reset-alert" class="reset-popup-container hidden">
+            <div id="reset-alert" class="reset-popup-container center-v hidden">
                 <form id="resetGame-form">
                     <label for="resetGame">This will reset both clocks. Proceed? </label>
                     <div class="button-group">
@@ -45,6 +45,69 @@
                         <button type="button" id="reset-no" name="resetGame">No</button>
                     </div>
                 </form>
+            </div>
+
+            <div id="edit-format-panel" class="edit-container center-v hidden">
+                <div class="edit-card">
+                    <div class="close-box">
+                        <a href="#" id="close">
+                            <img class="icon close-icon" src="/images/close.png" alt="close panel">
+                        </a>
+                    </div>
+                    <div class="bullet-section">
+                        <div class="edit-titles">
+                            <img class="icon format-icon" src="/images/bullet-icon.png" alt="bullet section icon">
+                            <p class="edit-section-title">Bullet</p>
+                        </div>
+                        <div class="edit-options">
+                            <button id="bullet1" class="format-options-btn">1 min</button>
+                            <button id="bullet2" class="format-options-btn">1 | 1</button>
+                            <button id="bullet3" class="format-options-btn">2 | 1</button>
+                        </div>
+                    </div>
+
+                    <div class="blitz-section">
+                        <div class="edit-titles">
+                            <img class="icon format-icon" src="/images/blitz-icon.png" alt="bullet section icon">
+                            <p class="edit-section-title">Blitz</p>
+                        </div>
+                        <div class="edit-options">
+                            <button id="blitz1" class="format-options-btn">3 min</button>
+                            <button id="blitz2" class="format-options-btn">3 | 2</button>
+                            <button id="blitz3" class="format-options-btn">5 min</button>
+                        </div>
+                    </div>
+
+                    <div class="rapid-section">
+                        <div class="edit-titles">
+                            <img class="icon format-icon" src="/images/rapid-icon.png" alt="bullet section icon">
+                            <p class="edit-section-title">Rapid</p>
+                        </div>
+                        <div class="edit-options">
+                            <button id="rapid1" class="format-options-btn">10 min</button>
+                            <button id="rapid2" class="format-options-btn">15 | 10</button>
+                            <button id="rapid3" class="format-options-btn">30 min</button>
+                        </div>
+                    </div>
+                    <div class="custom-section">
+                        <div class="edit-titles">
+                            <img class="icon format-icon" src="/images/custom-icon.png" alt="bullet section icon">
+                            <p class="edit-section-title">Custom</p>
+                        </div>
+                        <div class="edit-options">
+                            <form class="form-custom-time">
+                                <input type="number" class="input" maxlength="3" id="input-minutes" min="0" step="1" placeholder="min"></input>
+                                <input type="number" class="input" maxlength="3" id="input-seconds" min="0" step="1" placeholder="sec"></input>
+                                <input type="number" class="input increment" maxlength="2" id="input-increment" min="0" step="1" placeholder="increment sec (optional)"></input>
+                                
+                                <button type="submit" class="submit">
+                                    <img class="icon" src="/images/submit-icon.png" alt="submit">
+                                </button>
+                            </form>                            
+                        </div>                        
+                    </div>
+                    
+                </div>
             </div>
         </div>
 

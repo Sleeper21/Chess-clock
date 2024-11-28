@@ -1,36 +1,35 @@
 // Current format
-let currentFormat = {
-    hours: 0,
-    minutes: 0,
-    seconds: 5,
-    increment: true,
-};
-
-let currentIncrement = {
-    hours: 0,
-    minutes: 0,
-    seconds: 2,
-};
-
+let currentFormat
+let currentIncrement 
 // Player 1 clock
-let currentP1Hours = currentFormat.hours;
-let currentP1Minutes = currentFormat.minutes;
-let currentP1Seconds = currentFormat.seconds;
-let p1moveCount = 0;
-let clock1 = document.getElementById("player1");
-
+let currentP1Hours 
+let currentP1Minutes 
+let currentP1Seconds 
+let p1moveCount 
+let clock1 
 //Player 2 clock
-let currentP2Hours = currentFormat.hours;
-let currentP2Minutes = currentFormat.minutes;
-let currentP2Seconds = currentFormat.seconds;
-let p2moveCount = 0;
-let clock2 = document.getElementById("player2");
+let currentP2Hours  
+let currentP2Minutes 
+let currentP2Seconds 
+let p2moveCount 
+let clock2 
 
 // Nav icon settings
 let reset = document.getElementById("reset-icon");
 let startPause = document.getElementById("start-icon");
 let editTime = document.getElementById("edit-icon");
 let volume = document.getElementById("volume-icon");
+
+//Edit time formats settings buttons
+const bullet1 = document.getElementById("bullet1");
+const bullet2 = document.getElementById("bullet2");
+const bullet3 = document.getElementById("bullet3");
+const blitz1 = document.getElementById("blitz1");
+const blitz2 = document.getElementById("blitz2");
+const blitz3 = document.getElementById("blitz3");
+const rapid1 = document.getElementById("rapid1");
+const rapid2 = document.getElementById("rapid2");
+const rapid3 = document.getElementById("rapid3");
 
 // Swap variables
 let currentPlayer = "player1";
@@ -44,6 +43,9 @@ let firstCall = true; // will use this to wait 1sec in order to start decrementi
 let isMuted = false;
 const endMoveAudio = new Audio("/sounds/clock-sound.mp3");
 const timeoutAudio = new Audio("/sounds/timeout.mp3");
+
+//Set current Format variables
+setCurrentFormatStats();
 
 //Display the current Format
 //displayCurrentFormat();
@@ -59,8 +61,49 @@ clock2.addEventListener("click", startClock1);
 //Event listeners nav settings
 reset.addEventListener("click", resetClock);
 startPause.addEventListener("click", toggleStartPause);
-//editTime.addEventListener("click", editTimeFormat);
+editTime.addEventListener("click", editTimeFormat);
 volume.addEventListener("click", muteUnmute);
+
+function setCurrentFormatStats(hour, min, sec, increment){
+    // Current format
+    currentFormat = {
+        hours: hour ? hour : 0,
+        minutes: min ? min : 10,
+        seconds: sec ? sec : 0,
+        increment: increment ? true : false,
+    };
+
+    currentIncrement = 0;
+
+    // Player 1 clock
+    currentP1Hours = currentFormat.hours;
+    currentP1Minutes = currentFormat.minutes;
+    currentP1Seconds = currentFormat.seconds;
+    p1moveCount = 0;
+    clock1 = document.getElementById("player1");
+
+    //Player 2 clock
+    currentP2Hours = currentFormat.hours;
+    currentP2Minutes = currentFormat.minutes;
+    currentP2Seconds = currentFormat.seconds;
+    p2moveCount = 0;
+    clock2 = document.getElementById("player2");
+
+    //Set game Status
+    isPaused = false;
+    isGameRunning = false;
+    currentPlayer = "player1";
+    p1moveCount = 0;
+    p2moveCount = 0;
+    document.getElementById("p1-moveCount").textContent = p1moveCount;
+    document.getElementById("p2-moveCount").textContent = p2moveCount;
+    //Disable clock area buttons
+    clock1.disabled = false;
+    clock2.disabled = false;
+
+    updateClock_1_Display();
+    updateClock_2_Display();
+};
 
 function updateClock_1_Display(){
     //Hide hours display if hour < 1
@@ -98,17 +141,23 @@ function startClock1(){
     //Stop the opponent's clock
     clearInterval(timer2);
 
-    if (!isGameRunning) toggleStartPauseIcons("/images/pause.png"); //Prevents swapping icon during the game
+    //Handle if both clock are set up to 00:00
+    if ( currentP1Seconds == 0 && currentP1Minutes == 0 && currentP1Hours == 0){
+        currentPlayer = "player1";
+        endGame();
+        return;
+    } 
 
-    if (isPaused) { //Skips adding increment after press "resume clock" on that moment
+    // If game resumes from pause. prevent adding increment and place start icon. Also prevents swapping icons during game between turns
+    if (isPaused || !isGameRunning) { 
         document.getElementById("minutes2").textContent = String(parseInt(currentP2Minutes)).padStart(2, '0');
         document.getElementById("seconds2").textContent = String(parseInt(currentP2Seconds)).padStart(2, '0');
+        toggleStartPauseIcons("/images/pause.png");
     };
 
     // add increment to opponent's clock if current format has increment
     if ( currentFormat.increment && !isPaused ) {
-        currentP2Minutes = parseInt(document.getElementById("minutes2").textContent) + parseInt(currentIncrement.minutes)
-        currentP2Seconds = parseInt(document.getElementById("seconds2").textContent) + parseInt(currentIncrement.seconds)
+        currentP2Seconds = parseInt(document.getElementById("seconds2").textContent) + parseInt(currentIncrement)
         //Handle if seconds or minutes > 60
         if (currentP2Seconds >= 60) {
             currentP2Seconds = currentP2Seconds - 60;
@@ -123,14 +172,15 @@ function startClock1(){
     };
 
     //Increment move count
-    if (isGameRunning && !isPaused) { // Only increments after the first move (game is running) prevents incrementing is game was paused
-        p2moveCount++;
-        document.getElementById("p2-moveCount").textContent = p2moveCount;
-    }  
+    if (isGameRunning  && !isPaused ) { // Only increments after the first move (game is running) prevents incrementing if game was paused
+        p2moveCount++;        
+    }
+
+    //Update Move count display
+    document.getElementById("p2-moveCount").textContent = p2moveCount;
 
     //handle swap variables
     currentPlayer = "player1";
-    playerToMove = 1;
     isPaused = false;
     isGameRunning = true;
     firstCall = true;    
@@ -154,17 +204,23 @@ function startClock2(){
     //Stop the opponent's clock
     clearInterval(timer1);
 
-    if (!isGameRunning) toggleStartPauseIcons("/images/pause.png"); //Prevents swapping icon during the game
+    //prevent start game if both clock are set up to 00:00
+    if ( currentP2Seconds == 0 && currentP2Minutes == 0 && currentP2Hours == 0){
+        currentPlayer = "player2";
+        endGame();
+        return;
+    }
 
-    if (isPaused) { //Prevents adding increment after press "resume clock"
+    // If game resumes from pause. prevent adding increment and place start icon. Also prevents swapping icons during game between turns
+    if (isPaused || !isGameRunning) { //Prevents adding increment after press "resume clock"
         document.getElementById("minutes1").textContent = String(parseInt(currentP1Minutes)).padStart(2, '0');
         document.getElementById("seconds1").textContent = String(parseInt(currentP1Seconds)).padStart(2, '0');
+        toggleStartPauseIcons("/images/pause.png");
     }
 
     // add increment to opponent's clock if current format has increment
     if ( currentFormat.increment && !isPaused ) {
-        currentP1Minutes = parseInt(document.getElementById("minutes1").textContent) + parseInt(currentIncrement.minutes)
-        currentP1Seconds = parseInt(document.getElementById("seconds1").textContent) + parseInt(currentIncrement.seconds)
+        currentP1Seconds = parseInt(document.getElementById("seconds1").textContent) + parseInt(currentIncrement)
         //Handle if seconds or minutes is > 60
         if (currentP1Seconds >= 60) {
             currentP1Seconds = currentP1Seconds - 60;
@@ -182,12 +238,13 @@ function startClock2(){
     //Increment move count
     if (isGameRunning && !isPaused) { // Only increments after the first move (game is running) prevents incrementing is game was paused
         p1moveCount++;
-        document.getElementById("p1-moveCount").textContent = p1moveCount;
     }
+
+    //Update Move count display
+    document.getElementById("p1-moveCount").textContent = p1moveCount;
 
     //handle swap variables
     currentPlayer = "player2";
-    playerToMove = 2;
     isPaused = false;
     isGameRunning = true;
     firstCall = true;
@@ -245,7 +302,7 @@ function countdown(){
             currentP1Seconds = String(currentP1Seconds).padStart(2, '0');
 
             endGame();
-            startPause.setAttribute("src", "/images/start.png");            
+            toggleStartPauseIcons("/images/start.png");            
         }
 
         updateClock_1_Display();
@@ -308,7 +365,7 @@ function endGame(){
 function toggleStartPause(){
     let iconSrc = startPause.getAttribute("src");
 
-    if (iconSrc === "/images/start.png"){
+    if ((isPaused && isGameRunning) || (!isGameRunning && !isPaused)){
         //Start current Player's clock and swap icon
         if (currentPlayer === "player1"){
             startClock1();
@@ -320,11 +377,11 @@ function toggleStartPause(){
         } else {
             startPause.disabled = true;
         };
-       
+        
+        isPaused = false;
         //Swap icon
         toggleStartPauseIcons("/images/pause.png");
-
-    } else if ( iconSrc === "/images/pause.png" ) {
+    } else if ( isGameRunning && !isPaused ) {
         //Pause current player clock and swap icon
         if (currentPlayer === "player1") {
             clearInterval(timer1);
@@ -348,67 +405,45 @@ function toggleStartPauseIcons(srcPath){
 };
 
 function resetClock() {
-    //Stop clocks
+    //Stop clocks -- NOT PAUSE
     clearInterval(timer1);
     clearInterval(timer2);
-    isPaused = true;
 
     //Disable clock area buttons
     clock1.disabled = true;
     clock2.disabled = true;
 
-    //Always change icon to "start". The toggle function don't work here
-    startPause.setAttribute("src", "/images/start.png");
+    //Toggle start pause icon
+    toggleStartPauseIcons("/images/start.png");
 
     // Show confirmation pop up
     let resetPopup = document.getElementById("reset-alert");
     resetPopup.classList.remove("hidden");
 
     //Add eventlistener to each button:
-    //No
+    //No - go back
     document.getElementById("reset-no").addEventListener("click", () => {
+
         resetPopup.classList.add("hidden");
-        if (!isGameRunning && currentPlayer != "none"){
-            isPaused = false;
-            clock1.disabled = false;
-            clock2.disabled = false;
-        }
+        resumeCurrentGame();
     });
 
     //Yes
     document.getElementById("reset-yes").addEventListener("click", () => {
         resetPopup.classList.add("hidden");
-
         clock2.classList.remove("red");
         clock1.classList.remove("red");
         clock2.classList.remove("green");
         clock1.classList.remove("green");
 
-        //reset values to current format values
-        currentP1Hours = currentFormat.hours;
-        currentP1Minutes = currentFormat.minutes;
-        currentP1Seconds = currentFormat.seconds;
+        //Get values to restart game with same format
+        let formatHours = currentFormat.hours;
+        let formatMinutes = currentFormat.minutes;
+        let formatSeconds = currentFormat.seconds;
+        let formatIncrement = currentIncrement;
 
-        currentP2Hours = currentFormat.hours;
-        currentP2Minutes = currentFormat.minutes;
-        currentP2Seconds = currentFormat.seconds;
-
-        //Reset game status
-        isPaused = false;
-        isGameRunning = false;
-        currentPlayer = "player1";
-        p1moveCount = 0;
-        p2moveCount = 0;
-        document.getElementById("p1-moveCount").textContent = p1moveCount;
-        document.getElementById("p2-moveCount").textContent = p2moveCount;
-
-        //Disable clock area buttons
-        clock1.disabled = false;
-        clock2.disabled = false;
-
-        //Update displays
-        updateClock_1_Display();
-        updateClock_2_Display();
+        //reset game values
+        setCurrentFormatStats(formatHours, formatMinutes, formatSeconds, formatIncrement);
     })    
 }
 
@@ -429,4 +464,57 @@ function muteUnmute(){
    if ( isMuted ) {
     document.getElementById("volume-icon").setAttribute("src", "/images/soundOff.png")
    } else document.getElementById("volume-icon").setAttribute("src", "/images/soundOn.png")
+}
+
+function editTimeFormat(){
+    //Stop clocks -- NOT PAUSE
+    clearInterval(timer1);
+    clearInterval(timer2);
+    
+    //Disable clock area buttons
+    clock1.disabled = true;
+    clock2.disabled = true;
+
+    //Set icon to "start".
+    toggleStartPauseIcons("/images/start.png");
+
+    //Show options panel
+    document.getElementById("edit-format-panel").classList.remove("hidden");
+    
+    //eventlistener for close panel and go back
+    const close = document.getElementById("close");
+    close.addEventListener("click", () => {
+        document.getElementById("edit-format-panel").classList.add("hidden");
+        resumeCurrentGame();
+    });
+
+    //Eventlistener for all the option buttons
+    bullet1.addEventListener("click", () => {
+        //Pause clocks first
+
+        setCurrentFormatStats(0, 1, 0, 0);
+        
+        //close panel and set game stats
+        document.getElementById("edit-format-panel").classList.add("hidden");
+        updateClock_1_Display();
+        updateClock_2_Display();
+        clock2.classList.remove("red");
+        clock1.classList.remove("red");
+        clock2.classList.remove("green");
+        clock1.classList.remove("green");
+    });
+    
+}
+
+function resumeCurrentGame(){
+    if (isGameRunning && currentPlayer != "none"){
+        isPaused = true;
+        if(currentPlayer === "player1") clock2.disabled = false;
+        if(currentPlayer === "player2") clock1.disabled = false;
+    }
+    if ( !isGameRunning && currentPlayer != "none") {
+        isPaused = false;
+        clock2.disabled = false;
+        clock1.disabled = false;
+    }
 }
