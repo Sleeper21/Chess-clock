@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" href="/images/tab-icon.png" type="image/png">
     <title>Chess Clock App</title>
 
     <link rel="stylesheet" href="style.css">
@@ -52,19 +54,20 @@
                             <img class="icon close-icon" src="/images/close.png" alt="close panel">
                         </a>
                     </div>
-                    <div class="bullet-section">
+                    <!-- bullet section -->
+                    <div>
                         <div class="edit-titles">
                             <img class="icon format-icon" src="/images/bullet-icon.png" alt="bullet section icon">
                             <p class="edit-section-title">Bullet</p>
                         </div>
-                        <div id="bullet-options" class="edit-options">
+                        <div class="edit-options">
                             <button id="bullet1" class="format-options-btn">1 min</button>
                             <button id="bullet2" class="format-options-btn">1 | 1</button>
                             <button id="bullet3" class="format-options-btn">2 | 1</button>
                         </div>
                     </div>
-
-                    <div class="blitz-section">
+                    <!-- Blitz section -->
+                    <div>
                         <div class="edit-titles">
                             <img class="icon format-icon" src="/images/blitz-icon.png" alt="bullet section icon">
                             <p class="edit-section-title">Blitz</p>
@@ -75,8 +78,8 @@
                             <button id="blitz3" class="format-options-btn">5 min</button>
                         </div>
                     </div>
-
-                    <div class="rapid-section">
+                    <!-- Rapid section -->
+                    <div>
                         <div class="edit-titles">
                             <img class="icon format-icon" src="/images/rapid-icon.png" alt="bullet section icon">
                             <p class="edit-section-title">Rapid</p>
@@ -87,18 +90,19 @@
                             <button id="rapid3" class="format-options-btn">30 min</button>
                         </div>
                     </div>
+                    <!-- Custom section -->
                     <div class="custom-section">
                         <div class="edit-titles">
                             <img class="icon format-icon" src="/images/custom-icon.png" alt="bullet section icon">
                             <p class="edit-section-title">Custom Time - (increment optional)</p>
                         </div>
                         <div class="edit-options">
-                            <form class="form-custom-time">
-                                <input type="number" class="input" maxlength="3" id="input-minutes" min="0" step="1" placeholder="min"></input>
-                                <input type="number" class="input" maxlength="3" id="input-seconds" min="0" step="1" placeholder="sec"></input>
-                                <input type="number" class="input increment" maxlength="2" id="input-increment" min="0" step="1" placeholder="increment sec (optional)"></input>
+                            <form id="custom-time-form" class="form-custom-time">
+                                <input type="number" name="minutes" class="input" maxlength="3" min="0" step="1" autofocus placeholder="min" required>
+                                <input type="number" name="seconds" class="input" maxlength="3" min="0" max="59" step="1" placeholder="sec">
+                                <input type="number" name="inc" class="input increment" maxlength="2" min="0" step="1" placeholder="increment sec (optional)">
                                 
-                                <button type="submit" class="submit">
+                                <button id="submit-time" type="submit" class="submit">
                                     <img class="icon submit-img" src="/images/submit-icon.png" alt="submit">
                                 </button>
                             </form>                            

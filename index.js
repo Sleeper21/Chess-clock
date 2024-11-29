@@ -497,14 +497,51 @@ function editTimeFormat(){
         resumeCurrentGame();
     });
 
+    //Manual input form
+    let show
+    const customTimeForm = document.getElementById("custom-time-form");
+    
+    customTimeForm.addEventListener("submit", (event) => { 
+        const minInput = document.querySelector('input[name="minutes"]');
+
+        //Check if valid inputs were made
+        if (!minInput.checkValidity()) {
+            alert("Need to insert at least a '0' in the minutes field.");
+            minInput.focus();
+            EventTarget.preventDefault();
+        } else {
+            event.preventDefault();
+        let hoursInput = 0;
+        let minutesInput = customTimeForm.minutes.value;
+        if (minutesInput >= 60 ) {
+            minutesInput = minutesInput - 60;
+            hoursInput ++ ;
+        }
+        let secondsInput = customTimeForm.seconds.value;
+        let incrementInput = customTimeForm.inc.value;
+
+        //Format inputs to show on display
+        show = formatInputs(hoursInput, minutesInput, secondsInput, incrementInput);
+
+        //Set game stats
+        setCurrentFormatStats(hoursInput, minutesInput, secondsInput, incrementInput, show);
+
+        //Close panel
+        document.getElementById("edit-format-panel").classList.add("hidden");
+        }
+               
+    })
+
     //Eventlistener for all the option buttons
     const editCard = document.getElementById("time-options");
-    const timeOptions = editCard.querySelectorAll("button");
+
+    //Select all buttons except the submit form button
+    const timeOptions = editCard.querySelectorAll("button:not(#custom-time-form button)");
 
     timeOptions.forEach(option => {
         
         option.addEventListener("click", () => {
-            let show
+            
            switch (option.id) {
                case "bullet1":
                     //set game stats
@@ -565,4 +602,22 @@ function resumeCurrentGame(){
         clock2.disabled = false;
         clock1.disabled = false;
     }
+}
+
+function formatInputs(h, min, sec, increm){
+
+    if (increm > 0){
+        if (h > 0){
+            show = h + "h | " + increm;
+        } else if (min > 0){
+            show = min + " | " + increm;
+        } else show = sec + "sec | " + increm;
+
+     //In case of no increment
+    } else {
+        if (h > 0) show = h + "h";
+        else if (min > 0) show = min + "min";
+        else show = sec + "sec";
+    }    
+    return show;
 }

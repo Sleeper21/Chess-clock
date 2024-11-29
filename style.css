@@ -45,6 +45,7 @@ body{
     height: auto;
     border-radius: 20%;
     padding: .15rem;
+    cursor: pointer;
 }
 .icon:active{
     background-color: grey;
@@ -100,6 +101,7 @@ body{
 
 /* Reset Game confirmation pop Up */
 .reset-popup-container{
+    font-family: Helvetica, sans-serif;
     background-color: rgb(15, 15, 15);
     color: aliceblue;
     position: absolute;
@@ -107,7 +109,7 @@ body{
     height: 200px;
     padding: 1.5rem 1.7rem .5rem;
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     font-weight: 400;
     text-shadow: 1px 1px 4px black;
     border-radius: 15px;
@@ -125,11 +127,11 @@ body{
     border-radius: 10px;
     font-size: 1rem;
     font-weight: 700;
-    border: none;
+    border: 2px solid black;
     box-shadow: 2px 2px 3px black;
     background-color: rgb(78, 78, 78);
-    color: white;
-    text-shadow: 1px 1px 1px black;
+    color: aliceblue;
+    text-shadow: 2px 2px 2px black;
     cursor: pointer;
 }
 
@@ -150,6 +152,7 @@ body{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    font-family: Helvetica, sans-serif;
 }
 
 .close-box{
@@ -166,10 +169,15 @@ body{
     display: flex;
     align-items: center;
     text-align: left;
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 400;
     margin-bottom: 1rem;
     color: aliceblue;
+}
+
+.edit-section-title{
+    color: aliceblue;
+    text-shadow: 4px 4px 6px black;
 }
 
 .edit-options{
@@ -179,12 +187,16 @@ body{
 }
 
 .format-options-btn{
+    font-family: Helvetica, sans-serif;
     font-size: 1.2rem;
     font-weight: 600;
     padding: 1rem .5rem;
     border: none;
     border-radius: 10px;
     background-color: rgb(78, 78, 78);
+    border: 2px solid black;
+    box-shadow: 1px 1px 2px rgb(0, 0, 0);
+    text-shadow: .2px .2px 20px white;
     cursor: pointer;
 }
 
@@ -222,9 +234,10 @@ body{
     height: auto;
 }
 
-.submit:hover, .format-options-btn:hover{
-    transform: scale(1.15);
-    transition: 30ms ease;
+.submit:hover, .format-options-btn:hover, #reset-yes:hover, #reset-no:hover{
+    box-shadow: 5px 5px 7px black;
+    transform: scale(1.1);
+    transition: 20ms ease;
 }
 
 @media (width >= 824px) {
